@@ -1,0 +1,88 @@
+========================================================================
+             MAPPING DES SPRINTS ET DES FICHIERS DU FRAMEWORK
+========================================================================
+
+Ce fichier liste la correspondance entre chaque Sprint (défini dans 
+le dossier 'Framework-MD') et les fichiers sources Java du framework.
+
+------------------------------------------------------------------------
+Sprint 1 & 1 - Bis : Contrôleur Frontal et Interception
+------------------------------------------------------------------------
+- src/main/java/com/sprint/servlet/FrontServlet.java
+
+------------------------------------------------------------------------
+Sprint 2 & 2 - Bis : Annotations de base et scan de contrôleurs
+------------------------------------------------------------------------
+- src/main/java/com/sprint/annotation/Get.java
+- src/main/java/com/sprint/annotation/Post.java
+- src/main/java/com/sprint/annotation/Test.java
+- src/main/java/com/sprint/util/PackageScanner.java
+
+------------------------------------------------------------------------
+Sprint 3 : Scan au démarrage et routage initial
+------------------------------------------------------------------------
+- (Utilisation de PackageScanner et initialisation dans FrontServlet.java)
+
+------------------------------------------------------------------------
+Sprint 3 - Bis : Paramètres dynamiques d'URL (Path Variables)
+------------------------------------------------------------------------
+- src/main/java/com/sprint/util/PathPattern.java
+
+------------------------------------------------------------------------
+Sprint 4 : Rendu de vues simples
+------------------------------------------------------------------------
+- src/main/java/com/sprint/model/ModelView.java
+
+------------------------------------------------------------------------
+Sprint 5 : Passage de données du contrôleur à la JSP (ModelView.data)
+------------------------------------------------------------------------
+- src/main/java/com/sprint/model/ModelView.java (méthode addObject)
+
+------------------------------------------------------------------------
+Sprint 6, 6 - Bis & 6 - Ter : Liaison des arguments et @RequestParam
+------------------------------------------------------------------------
+- src/main/java/com/sprint/annotation/RequestParam.java
+- (Traitement des arguments dans FrontServlet.java)
+
+------------------------------------------------------------------------
+Sprint 7 : Gestion et validation des types de requêtes GET / POST
+------------------------------------------------------------------------
+- (Filtrage et enregistrement des routes par méthode HTTP dans FrontServlet.java)
+
+------------------------------------------------------------------------
+Sprint 8 & 8 - Bis : Liaison automatique des formulaires aux entités
+------------------------------------------------------------------------
+- src/main/java/com/sprint/util/EntityBinder.java
+
+------------------------------------------------------------------------
+Sprint 9 : API REST et réponses au format JSON
+------------------------------------------------------------------------
+- src/main/java/com/sprint/annotation/RestController.java
+- src/main/java/com/sprint/annotation/ResponseBody.java
+- src/main/java/com/sprint/model/JsonResponse.java
+
+------------------------------------------------------------------------
+Sprint 10 : Upload de fichiers
+------------------------------------------------------------------------
+- src/main/java/com/sprint/model/MultipartFile.java
+- src/main/java/com/sprint/util/MultipartRequestHandler.java
+
+------------------------------------------------------------------------
+Sprint 11 : Gestion de sessions découplées basées sur Map
+------------------------------------------------------------------------
+- src/main/java/com/sprint/annotation/Session.java
+- src/main/java/com/sprint/util/SessionManager.java
+- src/main/java/com/sprint/servlet/ExistMapServlet.java
+
+------------------------------------------------------------------------
+Sprint 11 - Bis : Habilitations, Rôles et Sécurité
+------------------------------------------------------------------------
+- src/main/java/com/sprint/annotation/Secured.java
+- src/main/java/com/sprint/annotation/RequireRole.java
+- src/main/java/com/sprint/annotation/RequirePermission.java
+- src/main/java/com/sprint/security/Role.java
+- src/main/java/com/sprint/security/RoleManager.java
+- src/main/java/com/sprint/security/SecurityInterceptor.java
+- src/main/java/com/sprint/model/UserSession.java
+
+========================================================================
