@@ -3,86 +3,170 @@
 ========================================================================
 
 Ce fichier liste la correspondance entre chaque Sprint (défini dans 
-le dossier 'Framework-MD') et les fichiers sources Java du framework.
+le dossier 'Framework-MD') et les fichiers sources Java du framework,
+accompagné d'une explication détaillée du rôle et du fonctionnement
+de chaque étape.
 
 ------------------------------------------------------------------------
 Sprint 1 & 1 - Bis : Contrôleur Frontal et Interception
 ------------------------------------------------------------------------
-- src/main/java/com/sprint/servlet/FrontServlet.java
+- Fichier clé : src/main/java/com/sprint/servlet/FrontServlet.java
+- Explication : 
+  Mise en place du point d'entrée unique ("Front Controller") de 
+  l'application web. Il intercepte toutes les requêtes entrantes. 
+  Si l'URL demandée correspond à une route enregistrée, le traitement 
+  se poursuit. Sinon, la servlet arrête la requête et génère un retour 
+  404 structuré sous forme de JSON.
 
 ------------------------------------------------------------------------
 Sprint 2 & 2 - Bis : Annotations de base et scan de contrôleurs
 ------------------------------------------------------------------------
-- src/main/java/com/sprint/annotation/Get.java
-- src/main/java/com/sprint/annotation/Post.java
-- src/main/java/com/sprint/annotation/Test.java
-- src/main/java/com/sprint/util/PackageScanner.java
+- Fichiers clés :
+  * src/main/java/com/sprint/annotation/Get.java
+  * src/main/java/com/sprint/annotation/Post.java
+  * src/main/java/com/sprint/annotation/Test.java
+  * src/main/java/com/sprint/util/PackageScanner.java
+- Explication : 
+  Définition des annotations nécessaires à la configuration des routes 
+  au niveau des méthodes. Mise en place de mécanismes permettant 
+  d'inspecter les classes au démarrage et d'afficher sous forme de log 
+  la liste des annotations détectées et les routes associées pour 
+  faciliter le débogage.
 
 ------------------------------------------------------------------------
 Sprint 3 : Scan au démarrage et routage initial
 ------------------------------------------------------------------------
-- (Utilisation de PackageScanner et initialisation dans FrontServlet.java)
+- Explication : 
+  Au démarrage du serveur (méthode init de FrontServlet), le framework 
+  scanne automatiquement le classpath dans le package com.sprint.controller 
+  à l'aide de PackageScanner. Il découvre ainsi dynamiquement toutes les 
+  classes annotées et construit une table associative (routeMap) liant 
+  les URLs aux méthodes Java à exécuter.
 
 ------------------------------------------------------------------------
 Sprint 3 - Bis : Paramètres dynamiques d'URL (Path Variables)
 ------------------------------------------------------------------------
-- src/main/java/com/sprint/util/PathPattern.java
+- Fichier clé : src/main/java/com/sprint/util/PathPattern.java
+- Explication : 
+  Prise en charge des chemins d'URL dynamiques contenant des variables 
+  (ex : /dept/{id}). Utilisation d'expressions régulières pour faire 
+  correspondre le chemin tapé avec le schéma d'URL défini par le 
+  développeur, et extraction des valeurs correspondantes.
 
 ------------------------------------------------------------------------
 Sprint 4 : Rendu de vues simples
 ------------------------------------------------------------------------
-- src/main/java/com/sprint/model/ModelView.java
+- Fichier clé : src/main/java/com/sprint/model/ModelView.java
+- Explication : 
+  Introduction de la classe ModelView pour séparer la logique métier de 
+  la présentation. Si le contrôleur retourne un objet ModelView, le 
+  framework redirige automatiquement la requête vers la page JSP 
+  correspondante sous /WEB-INF/views/. Si la méthode renvoie une chaîne 
+  de caractères simple (String), celle-ci est affichée directement à l'écran.
 
 ------------------------------------------------------------------------
-Sprint 5 : Passage de données du contrôleur à la JSP (ModelView.data)
+Sprint 5 : Passage de données du contrôleur à la JSP
 ------------------------------------------------------------------------
-- src/main/java/com/sprint/model/ModelView.java (méthode addObject)
+- Fichier clé : src/main/java/com/sprint/model/ModelView.java (méthodes associées)
+- Explication : 
+  Permet d'envoyer des objets depuis le contrôleur vers la vue. 
+  Le ModelView contient une Map de données mise à jour via la méthode 
+  addObject(key, value). Avant le forward vers la vue JSP, le framework 
+  parcourt cette Map et injecte chaque paire clé-valeur comme attribut 
+  de la requête HTTP (via request.setAttribute).
 
 ------------------------------------------------------------------------
 Sprint 6, 6 - Bis & 6 - Ter : Liaison des arguments et @RequestParam
 ------------------------------------------------------------------------
-- src/main/java/com/sprint/annotation/RequestParam.java
-- (Traitement des arguments dans FrontServlet.java)
+- Fichier clé : src/main/java/com/sprint/annotation/RequestParam.java
+  (et méthode extraireArguments dans FrontServlet.java)
+- Explication : 
+  Mécanisme d'injection automatique des paramètres de la requête HTTP 
+  dans les arguments de la méthode du contrôleur. Le framework résout 
+  les paramètres d'URL dynamique, recherche les variables de formulaire 
+  déclarées avec l'annotation @RequestParam, convertit les types simples 
+  (int, double, boolean, String) et permet également l'injection des 
+  objets servlet HttpServletRequest et HttpServletResponse.
 
 ------------------------------------------------------------------------
 Sprint 7 : Gestion et validation des types de requêtes GET / POST
 ------------------------------------------------------------------------
-- (Filtrage et enregistrement des routes par méthode HTTP dans FrontServlet.java)
+- Explication : 
+  Séparation stricte des verbes HTTP (GET et POST). Le système de routage 
+  indexe les routes avec leur méthode HTTP (ex : "GET:/users" ou 
+  "POST:/users"). Cela permet d'exécuter des méthodes de contrôleur 
+  différentes pour une même URL en fonction du type de requête émise.
 
 ------------------------------------------------------------------------
 Sprint 8 & 8 - Bis : Liaison automatique des formulaires aux entités
 ------------------------------------------------------------------------
-- src/main/java/com/sprint/util/EntityBinder.java
+- Fichier clé : src/main/java/com/sprint/util/EntityBinder.java
+- Explication : 
+  Liaison automatique des données complexes (Binding d'entités). Si une 
+  méthode de contrôleur prend en argument un objet personnalisé (modèle 
+  ou entité), le framework instancie automatiquement cet objet et utilise 
+  la réflexion pour injecter les valeurs des paramètres HTTP directement 
+  dans les attributs correspondants de l'objet.
 
 ------------------------------------------------------------------------
 Sprint 9 : API REST et réponses au format JSON
 ------------------------------------------------------------------------
-- src/main/java/com/sprint/annotation/RestController.java
-- src/main/java/com/sprint/annotation/ResponseBody.java
-- src/main/java/com/sprint/model/JsonResponse.java
+- Fichiers clés :
+  * src/main/java/com/sprint/annotation/RestController.java
+  * src/main/java/com/sprint/annotation/ResponseBody.java
+  * src/main/java/com/sprint/model/JsonResponse.java
+- Explication : 
+  Transformation du framework en moteur d'API REST. Si la classe est 
+  annotée avec @RestController ou la méthode avec @ResponseBody, le 
+  framework sérialise directement la valeur de retour en chaîne JSON 
+  à l'aide de Jackson. Les réponses d'erreur et de succès sont structurées 
+  de façon standardisée via l'objet JsonResponse (contenant status, 
+  code, data, message).
 
 ------------------------------------------------------------------------
 Sprint 10 : Upload de fichiers
 ------------------------------------------------------------------------
-- src/main/java/com/sprint/model/MultipartFile.java
-- src/main/java/com/sprint/util/MultipartRequestHandler.java
+- Fichiers clés :
+  * src/main/java/com/sprint/model/MultipartFile.java
+  * src/main/java/com/sprint/util/MultipartRequestHandler.java
+- Explication : 
+  Prise en charge des requêtes multipart/form-data. Le framework isole 
+  et convertit les fichiers uploadés en objets MultipartFile. Ces fichiers 
+  deviennent alors directement accessibles au sein du contrôleur, soit 
+  en tant qu'argument direct de la méthode, soit comme champ lié dans 
+  une entité (via EntityBinder).
 
 ------------------------------------------------------------------------
 Sprint 11 : Gestion de sessions découplées basées sur Map
 ------------------------------------------------------------------------
-- src/main/java/com/sprint/annotation/Session.java
-- src/main/java/com/sprint/util/SessionManager.java
-- src/main/java/com/sprint/servlet/ExistMapServlet.java
+- Fichiers clés :
+  * src/main/java/com/sprint/annotation/Session.java
+  * src/main/java/com/sprint/util/SessionManager.java
+  * src/main/java/com/sprint/servlet/ExistMapServlet.java
+- Explication : 
+  Système de session en mémoire indépendant de HttpSession pour ne pas 
+  lier le code du développeur aux spécifications des servlets. La session 
+  est exposée sous forme de simple Map<String, Object> injectable avec 
+  l'annotation @Session. SessionManager gère le cycle de vie, la création 
+  et le nettoyage de ces maps associées à un SESSION_ID.
 
 ------------------------------------------------------------------------
 Sprint 11 - Bis : Habilitations, Rôles et Sécurité
 ------------------------------------------------------------------------
-- src/main/java/com/sprint/annotation/Secured.java
-- src/main/java/com/sprint/annotation/RequireRole.java
-- src/main/java/com/sprint/annotation/RequirePermission.java
-- src/main/java/com/sprint/security/Role.java
-- src/main/java/com/sprint/security/RoleManager.java
-- src/main/java/com/sprint/security/SecurityInterceptor.java
-- src/main/java/com/sprint/model/UserSession.java
+- Fichiers clés :
+  * src/main/java/com/sprint/annotation/Secured.java
+  * src/main/java/com/sprint/annotation/RequireRole.java
+  * src/main/java/com/sprint/annotation/RequirePermission.java
+  * src/main/java/com/sprint/security/Role.java
+  * src/main/java/com/sprint/security/RoleManager.java
+  * src/main/java/com/sprint/security/SecurityInterceptor.java
+  * src/main/java/com/sprint/model/UserSession.java
+- Explication : 
+  Gestion de la sécurité applicative par rôles et permissions. 
+  SecurityInterceptor intercepte l'appel des routes protégées par les 
+  annotations @Secured, @RequireRole ou @RequirePermission. Il compare 
+  les habilitations requises avec celles de l'utilisateur connecté 
+  (représenté par UserSession dans la session Map) et bloque l'exécution 
+  avec une erreur 403 (ou redirection) en cas de droits insuffisants.
 
 ========================================================================
